@@ -181,6 +181,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90e326475739edb46bd42951b9d7c607, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isConstructing: 0
+  isDemolishing: 0
+  curBuildingPrefab: {fileID: 0}
+  buildingParent: {fileID: 982211317}
+  curCursorPos: {x: 0, y: 0, z: 0}
+  buildingCursor: {fileID: 0}
+  gridPlane: {fileID: 1625779905}
+  _curStructure: {fileID: 0}
+  structurePrefab: []
 --- !u!114 &15732041
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3303,7 +3312,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1064470944}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 15732040}
+        m_TargetAssemblyTypeName: StructureManager, Assembly-CSharp
+        m_MethodName: BeginNewBuildingPlacement
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 3470588714670788713, guid: dfa027bdb6d8c6844895269e86f268d0, type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1064470944
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3836,7 +3857,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1216354131}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.668, y: -0.76, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4599,7 +4620,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1625779906
 Transform:
   m_ObjectHideFlags: 0
@@ -4608,7 +4629,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1625779905}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.05, z: 0}
+  m_LocalPosition: {x: 0, y: 0.03, z: 0}
   m_LocalScale: {x: 100, y: 1, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []

@@ -1242,11 +1242,11 @@ MonoBehaviour:
   - {fileID: 1772410112290960}
   charFaceID: 0
   charFacePics:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 21300000, guid: 9467918648c544d4f8ef8df2f50e6996, type: 3}
+  - {fileID: 21300000, guid: f9dd94a115bbb6840a1dfe355e7be1d0, type: 3}
+  - {fileID: 21300000, guid: f1174d071d9f07c4d81523da9ac4d235, type: 3}
+  - {fileID: 21300000, guid: 376eb6257ef1ced4883a997c7dbc4285, type: 3}
+  - {fileID: 21300000, guid: c6829ae665c163b43a357f953b84bb89, type: 3}
   staffName: 
   dailyWage: 0
   staffGender: 0
