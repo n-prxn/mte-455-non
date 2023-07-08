@@ -52,6 +52,9 @@ public class StructureManager : MonoBehaviour
     }
 
     public void BeginNewBuildingPlacement(GameObject prefab){
+        if(CheckMoney(prefab) == false)
+            return;
+
         isDemolishing = false;
         isConstructing = true;
 
@@ -71,6 +74,11 @@ public class StructureManager : MonoBehaviour
         GameObject structureObj = Instantiate(curBuildingPrefab, curCursorPos, ghostBuilding.transform.rotation, buildingParent.transform);
 
         Structure s = structureObj.GetComponent<Structure>();
+        Office.instance.AddBuilding(s);
+
+        DeductMoney(s.CostToBuild);
+        if(!CheckMoney(structureObj))
+            CancelStructureMode();
     }
 
     private void CheckLeftClick(){
@@ -97,5 +105,18 @@ public class StructureManager : MonoBehaviour
         if(Input.GetMouseButtonDown(1)){
             RotateBuilding();
         }
+    }
+
+    private bool CheckMoney(GameObject obj){
+        int cost = obj.GetComponent<Structure>().CostToBuild;
+        if(cost <= Office.instance.Money)
+            return true;
+        else   
+            return false;
+    }
+
+    private void DeductMoney(int cost){
+        Office.instance.Money -= cost;
+        MainUI.instance.UpdateResourceUi();
     }
 }

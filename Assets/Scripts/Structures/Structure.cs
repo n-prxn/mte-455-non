@@ -6,6 +6,7 @@ public enum StructureType{
     road,
     building,
     wheat,
+    apple
 }
 
 public class Structure : MonoBehaviour
