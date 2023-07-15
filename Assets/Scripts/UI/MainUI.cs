@@ -14,6 +14,8 @@ public class MainUI : MonoBehaviour
     [SerializeField] private TMP_Text appleText;
     [SerializeField] private TMP_Text dayText;
 
+    public GameObject laborMarketPanel;
+
     public static MainUI instance;
 
     void Awake(){
@@ -40,5 +42,12 @@ public class MainUI : MonoBehaviour
         cornText.text = Office.instance.Corn.ToString();
         milkText.text = Office.instance.Milk.ToString();
         appleText.text = Office.instance.Apple.ToString();
+    }
+
+    public void ToggleLaborPanel(){
+        if(!laborMarketPanel.activeInHierarchy)
+            laborMarketPanel.SetActive(true);
+        else
+            laborMarketPanel.SetActive(false);
     }
 }
