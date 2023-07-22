@@ -6,22 +6,21 @@ public enum StructureType{
     road,
     building,
     wheat,
-    apple
+    apple,
+    melon,
+    corn,
+    milk
 }
 
-public class Structure : MonoBehaviour
+public abstract class Structure : MonoBehaviour
 {
-    [SerializeField] private StructureType structureType;
+    [SerializeField] protected StructureType structureType;
     public StructureType StructureType{
         get {return structureType;}
         set {structureType = value;}
     }
 
     [SerializeField] protected bool functional;
-    public bool Functional{
-        get {return functional;}
-        set {functional = value;}
-    }
 
     [SerializeField] private string structureName;
     public string StructureName{

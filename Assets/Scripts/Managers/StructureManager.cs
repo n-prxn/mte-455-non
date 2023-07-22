@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.EventSystems;
 public class StructureManager : MonoBehaviour
 {
     [SerializeField] private bool isConstructing;
@@ -85,6 +85,8 @@ public class StructureManager : MonoBehaviour
         if(Input.GetMouseButtonDown(0)){
             if(isConstructing)
                 PlaceBuilding();
+            else
+                CheckOpenPanel();
         }
     }
 
@@ -117,6 +119,35 @@ public class StructureManager : MonoBehaviour
 
     private void DeductMoney(int cost){
         Office.instance.Money -= cost;
+        MainUI.instance.UpdateResourceUi();
+    }
+
+    public void OpenFarmPanel(){
+        string name = CurStructure.GetComponent<Farm>().StructureName;
+
+        MainUI.instance.FarmNameText.text = name;
+        MainUI.instance.ToggleFarmPanel();
+    }
+
+    private void CheckOpenPanel(){
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if(Physics.Raycast(ray, out hit, 1000)){
+            if(EventSystem.current.IsPointerOverGameObject())
+                return;
+            
+            CurStructure = hit.collider.gameObject;
+            switch(hit.collider.tag){
+                case "Farm":
+                    OpenFarmPanel();
+                    break;
+            }
+        }
+    }
+
+    public void CallStaff(){
+        Office.instance.SendStaff(CurStructure);
         MainUI.instance.UpdateResourceUi();
     }
 }

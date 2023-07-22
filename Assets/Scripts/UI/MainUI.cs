@@ -18,6 +18,13 @@ public class MainUI : MonoBehaviour
 
     public static MainUI instance;
 
+    public GameObject farmPanel;
+    [SerializeField] private TMP_Text farmNameText;
+    public TMP_Text FarmNameText{
+        get{return farmNameText;}
+        set{farmNameText = value;}
+    }
+
     void Awake(){
         instance = this;
     }
@@ -49,5 +56,12 @@ public class MainUI : MonoBehaviour
             laborMarketPanel.SetActive(true);
         else
             laborMarketPanel.SetActive(false);
+    }
+    
+    public void ToggleFarmPanel(){
+        if(!farmPanel.activeInHierarchy)
+            farmPanel.SetActive(true);
+        else
+            farmPanel.SetActive(false);
     }
 }
