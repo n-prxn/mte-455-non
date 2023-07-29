@@ -171,6 +171,7 @@ public class Office : MonoBehaviour
 
         w.TargetStructure = null;
         w.SetToWalk(spawnPosition.transform.position);
+        w.DisableAllTools();
 
         FireStaff(w);
         MainUI.instance.UpdateResourceUi();

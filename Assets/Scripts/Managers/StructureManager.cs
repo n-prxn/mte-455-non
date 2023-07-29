@@ -12,16 +12,17 @@ public class StructureManager : MonoBehaviour
 
     [SerializeField] private Vector3 curCursorPos;
 
-    public GameObject buildingCursor , demolishCursor;
+    public GameObject buildingCursor, demolishCursor;
     public GameObject gridPlane;
 
     private GameObject ghostBuilding;
 
     [SerializeField] private GameObject _curStructure;
 
-    public GameObject CurStructure{
-        get {return _curStructure;}
-        set {_curStructure = value;}
+    public GameObject CurStructure
+    {
+        get { return _curStructure; }
+        set { _curStructure = value; }
     }
 
     [SerializeField] private GameObject[] structurePrefab;
@@ -36,30 +37,37 @@ public class StructureManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-             CancelStructureMode();
-             CancelDemolishingMode();
+            CancelStructureMode();
+            CancelDemolishingMode();
         }
 
         curCursorPos = Formula.instance.GetCurTilePosition();
-        if(isConstructing){
+        if (isConstructing)
+        {
             buildingCursor.transform.position = curCursorPos;
             gridPlane.SetActive(true);
-        }else if(isDemolishing){
+        }
+        else if (isDemolishing)
+        {
             demolishCursor.transform.position = curCursorPos;
             gridPlane.SetActive(true);
         }
-        else{
+        else
+        {
             gridPlane.SetActive(false);
         }
 
         CheckLeftClick();
         CheckRightClick();
+
+        //CursorAreaCheck.instance.Cursor = curCursorPos;
     }
 
-    public void BeginNewBuildingPlacement(GameObject prefab){
-        if(CheckMoney(prefab) == false)
+    public void BeginNewBuildingPlacement(GameObject prefab)
+    {
+        if (CheckMoney(prefab) == false)
             return;
 
         isDemolishing = false;
@@ -74,109 +82,146 @@ public class StructureManager : MonoBehaviour
         buildingCursor.SetActive(true);
     }
 
-    public void PlaceBuilding(){
-        if(!buildingCursor.GetComponent<FindBuildingSite>().CanBuild)
+    public void PlaceBuilding()
+    {
+        if (!buildingCursor.GetComponent<FindBuildingSite>().CanBuild)
             return;
-        
+
         GameObject structureObj = Instantiate(curBuildingPrefab, curCursorPos, ghostBuilding.transform.rotation, buildingParent.transform);
 
         Structure s = structureObj.GetComponent<Structure>();
         Office.instance.AddBuilding(s);
 
         DeductMoney(s.CostToBuild);
-        if(!CheckMoney(structureObj))
+        if (!CheckMoney(structureObj))
             CancelStructureMode();
     }
 
-    private void CheckLeftClick(){
-        if(Input.GetMouseButtonDown(0)){
-            if(isConstructing)
+    private void CheckLeftClick()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (isConstructing)
                 PlaceBuilding();
-            else if(isDemolishing)
+            else if (isDemolishing)
                 Demolish();
             else
                 CheckOpenPanel();
         }
     }
 
-    private void CancelStructureMode(){
+    private void CancelStructureMode()
+    {
         isConstructing = false;
-        if(buildingCursor != null)
+        if (buildingCursor != null)
             buildingCursor.SetActive(false);
 
-        if(ghostBuilding != null)
+        if (ghostBuilding != null)
             Destroy(ghostBuilding);
     }
 
-    private void CancelDemolishingMode(){
+    private void CancelDemolishingMode()
+    {
         isDemolishing = false;
-        if(demolishCursor != null)
+        if (demolishCursor != null)
             demolishCursor.SetActive(false);
     }
 
-    private void RotateBuilding(){
+    private void RotateBuilding()
+    {
         ghostBuilding.transform.rotation *= Quaternion.Euler(Vector3.up * 90);
     }
 
-    private void CheckRightClick(){
-        if(Input.GetMouseButtonDown(1)){
+    private void CheckRightClick()
+    {
+        if (Input.GetMouseButtonDown(1))
+        {
             RotateBuilding();
         }
     }
 
-    private bool CheckMoney(GameObject obj){
+    private bool CheckMoney(GameObject obj)
+    {
         int cost = obj.GetComponent<Structure>().CostToBuild;
-        if(cost <= Office.instance.Money)
+        if (cost <= Office.instance.Money)
             return true;
-        else   
+        else
             return false;
     }
 
-    private void DeductMoney(int cost){
+    private void DeductMoney(int cost)
+    {
         Office.instance.Money -= cost;
         MainUI.instance.UpdateResourceUi();
     }
 
-    public void OpenFarmPanel(){
+    public void OpenFarmPanel()
+    {
         string name = CurStructure.GetComponent<Farm>().StructureName;
 
         MainUI.instance.FarmNameText.text = name;
         MainUI.instance.ToggleFarmPanel();
     }
 
-    private void CheckOpenPanel(){
+    private void CheckOpenPanel()
+    {
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
-        if(Physics.Raycast(ray, out hit, 1000)){
-            if(EventSystem.current.IsPointerOverGameObject())
+        if (Physics.Raycast(ray, out hit, 1000))
+        {
+            if (EventSystem.current.IsPointerOverGameObject())
                 return;
-            
+
             CurStructure = hit.collider.gameObject;
-            switch(hit.collider.tag){
+            switch (hit.collider.tag)
+            {
                 case "Farm":
-                    OpenFarmPanel();
-                    break;
+                    {
+                        OpenFarmPanel();
+                        break;
+                    }
             }
         }
     }
 
-    public void CallStaff(){
+    public void CallStaff()
+    {
         Office.instance.SendStaff(CurStructure);
         MainUI.instance.UpdateResourceUi();
     }
 
-    private void Demolish(){
-        Structure structure = Office.instance.Structures.Find(x => x.transform.position == curCursorPos);
+    private void Demolish()
+    {
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, 1000))
+        {
+            if (EventSystem.current.IsPointerOverGameObject())
+                return;
+
+            switch (hit.collider.tag)
+            {
+                case "Farm":
+                    {
+                        Office.instance.RemoveBuilding(hit.collider.GetComponent<Structure>());
+                        break;
+                    }
+            }
+        }
+
+        /*Structure structure = Office.instance.Structures.Find(x => x.transform.position == curCursorPos);
 
         if(structure != null){
             Office.instance.RemoveBuilding(structure);
-        }
+        }*/
 
         MainUI.instance.UpdateResourceUi();
     }
 
-    public void ToggleDemolish(){
+    public void ToggleDemolish()
+    {
         isConstructing = false;
         isDemolishing = !isDemolishing;
 

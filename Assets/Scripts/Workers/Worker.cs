@@ -218,7 +218,7 @@ public class Worker : MonoBehaviour
         }
     }
 
-    private void DisableAllTools(){
+    public void DisableAllTools(){
         for(int i = 0 ; i < tools.Length ; i++)
             tools[i].SetActive(false);
     }

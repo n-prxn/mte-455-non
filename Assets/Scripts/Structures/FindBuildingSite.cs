@@ -47,6 +47,14 @@ public class FindBuildingSite : MonoBehaviour
         }
     }
 
+    public void ChangeColorFromCursorOverlay(string mode){
+        switch(mode){
+            case "Demolishing":
+                pRenderer.material.color = Color.red;
+                break;
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         ChangeColor(other, false, Color.red);
