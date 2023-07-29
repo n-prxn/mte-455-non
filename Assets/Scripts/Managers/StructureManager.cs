@@ -12,7 +12,7 @@ public class StructureManager : MonoBehaviour
 
     [SerializeField] private Vector3 curCursorPos;
 
-    public GameObject buildingCursor;
+    public GameObject buildingCursor , demolishCursor;
     public GameObject gridPlane;
 
     private GameObject ghostBuilding;
@@ -37,13 +37,20 @@ public class StructureManager : MonoBehaviour
     void Update()
     {
         if(Input.GetKeyDown(KeyCode.Escape))
-            CancelStructureMode();
+        {
+             CancelStructureMode();
+             CancelDemolishingMode();
+        }
 
         curCursorPos = Formula.instance.GetCurTilePosition();
         if(isConstructing){
             buildingCursor.transform.position = curCursorPos;
             gridPlane.SetActive(true);
-        }else{
+        }else if(isDemolishing){
+            demolishCursor.transform.position = curCursorPos;
+            gridPlane.SetActive(true);
+        }
+        else{
             gridPlane.SetActive(false);
         }
 
@@ -85,6 +92,8 @@ public class StructureManager : MonoBehaviour
         if(Input.GetMouseButtonDown(0)){
             if(isConstructing)
                 PlaceBuilding();
+            else if(isDemolishing)
+                Demolish();
             else
                 CheckOpenPanel();
         }
@@ -97,6 +106,12 @@ public class StructureManager : MonoBehaviour
 
         if(ghostBuilding != null)
             Destroy(ghostBuilding);
+    }
+
+    private void CancelDemolishingMode(){
+        isDemolishing = false;
+        if(demolishCursor != null)
+            demolishCursor.SetActive(false);
     }
 
     private void RotateBuilding(){
@@ -149,5 +164,23 @@ public class StructureManager : MonoBehaviour
     public void CallStaff(){
         Office.instance.SendStaff(CurStructure);
         MainUI.instance.UpdateResourceUi();
+    }
+
+    private void Demolish(){
+        Structure structure = Office.instance.Structures.Find(x => x.transform.position == curCursorPos);
+
+        if(structure != null){
+            Office.instance.RemoveBuilding(structure);
+        }
+
+        MainUI.instance.UpdateResourceUi();
+    }
+
+    public void ToggleDemolish(){
+        isConstructing = false;
+        isDemolishing = !isDemolishing;
+
+        gridPlane.SetActive(isDemolishing);
+        demolishCursor.SetActive(isDemolishing);
     }
 }

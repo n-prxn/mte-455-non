@@ -50,7 +50,18 @@ public class StaffCard : MonoBehaviour
     public void Hire(){
         bool hired = Office.instance.ToHireStaff(LaborMarket.instance.LaborInMarket[id]);
         if(hired)
-            gameObject.SetActive(false);
+        {
+            HireButton.gameObject.SetActive(false);
+            FireButton.gameObject.SetActive(true);
+        }
+    }
+
+    public void Fire(){
+        bool fired = Office.instance.ToFireStaff(LaborMarket.instance.LaborInMarket[id]);
+        if(fired){
+            HireButton.gameObject.SetActive(true);
+            FireButton.gameObject.SetActive(false);
+        }
     }
 
 
