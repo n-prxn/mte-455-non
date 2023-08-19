@@ -44,14 +44,14 @@ public class CameraController : MonoBehaviour
         if(Input.GetKey(KeyCode.X))
             zoomModifier = -0.01f;
 
-            float dist = Vector3.Distance(transform.position,cam.transform.position);
+        float dist = Vector3.Distance(transform.position,cam.transform.position);
 
-            if(dist < minZoomDist && zoomModifier > 0f)
-                return;
-            else if(dist > maxZoomDist && zoomModifier < 0f)
-                return;
+        if(dist < minZoomDist && zoomModifier > 0f)
+            return;
+        else if(dist > maxZoomDist && zoomModifier < 0f)
+            return;
 
-            cam.transform.position += cam.transform.forward * zoomModifier * zoomSpeed;
+        cam.transform.position += cam.transform.forward * zoomModifier * zoomSpeed;
     }
 
     private void MoveByKB(){

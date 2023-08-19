@@ -4,23 +4,13 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
-public enum UnitState
-{
-    Idle,
-    Walk,
-    Plow,
-    Sow,
-    Water,
-    Harvest
-}
-
 public enum Gender
 {
     male,
     female
 }
 
-public class Worker : MonoBehaviour
+public class Worker : Unit
 {
     private int id;
     public int ID
@@ -72,87 +62,6 @@ public class Worker : MonoBehaviour
     {
         get { return hired; }
         set { hired = value; }
-    }
-
-    [SerializeField] private UnitState state;
-    public UnitState State
-    {
-        get { return state; }
-        set { state = value; }
-    }
-
-    private NavMeshAgent navAgent;
-    public NavMeshAgent NavAgent
-    {
-        get { return navAgent; }
-        set { navAgent = value; }
-    }
-
-    private float distance;
-    [SerializeField] private GameObject targetStructure;
-    public GameObject TargetStructure
-    {
-        get { return targetStructure; }
-        set { targetStructure = value; }
-    }
-
-    private float CheckStateTimer = 0f;
-    private float CheckStateTimeWait = 0.5f;
-
-    [SerializeField] private GameObject[] tools;
-
-    void Awake()
-    {
-        navAgent = GetComponent<NavMeshAgent>();
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        CheckStaffState();
-    }
-
-    private void CheckStaffState()
-    {
-        CheckStateTimer += Time.deltaTime;
-        if (CheckStateTimer >= CheckStateTimeWait)
-        {
-            CheckStateTimer = 0f;
-            SwitchStaffState();
-        }
-    }
-
-    private void SwitchStaffState()
-    {
-        switch (state)
-        {
-            case UnitState.Walk:
-                WalkUpdate();
-                break;
-        }
-    }
-
-    private void WalkUpdate()
-    {
-        distance = Vector3.Distance(navAgent.destination, transform.position);
-        if (distance <= 3f)
-        {
-            navAgent.isStopped = true;
-            state = UnitState.Idle;
-        }
-    }
-
-    public void SetToWalk(Vector3 dest)
-    {
-        state = UnitState.Walk;
-        navAgent.SetDestination(dest);
-        navAgent.isStopped = false;
     }
 
     public void InitiateCharID(int i)
@@ -215,6 +124,14 @@ public class Worker : MonoBehaviour
                     farm.CheckTimeForWork();
                     break;
             }
+        }
+    }
+
+    public void HideCharSkin()
+    {
+        foreach (GameObject obj in charSkin)
+        {
+            obj.SetActive(false);
         }
     }
 
