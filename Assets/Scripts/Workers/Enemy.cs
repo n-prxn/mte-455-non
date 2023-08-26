@@ -64,6 +64,9 @@ public class Enemy : Unit
         if(enemyBuilding != null){
             targetStructure = enemyBuilding.gameObject;
             state = UnitState.MoveToAttackBuilding;
+        }else{
+            targetStructure = null;
+            state = UnitState.Idle;
         }
     }
 }

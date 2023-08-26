@@ -58,4 +58,10 @@ public abstract class Structure : MonoBehaviour
     {
         
     }
+
+    public void TakeDamage(int n){
+        hp -= n;
+        if(hp <= 0)
+            Destroy(gameObject);
+    }
 }
