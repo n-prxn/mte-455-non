@@ -9,6 +9,12 @@ public class Building : Structure
         get{return isHousing;}
         set{isHousing = value;}
     }
+
+    [SerializeField] bool isWarehouse;
+    public bool IsWarehouse{
+        get{return isWarehouse;}
+        set{isWarehouse = value;}
+    }
     // Start is called before the first frame update
     void Start()
     {

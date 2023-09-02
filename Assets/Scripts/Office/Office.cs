@@ -53,6 +53,12 @@ public class Office : MonoBehaviour
         set { apple = value; }
     }
 
+    [SerializeField] private int stone;
+    public int Stone{
+        get { return stone; }
+        set { stone = value; }
+    }
+
     [SerializeField] private int dailyCostWages;
     [SerializeField] private List<Structure> structures = new List<Structure>();
     public List<Structure> Structures
@@ -225,5 +231,29 @@ public class Office : MonoBehaviour
             unitLimit = 100;
         else if (unitLimit < 0)
             unitLimit = 0;
+    }
+
+    public void SendWorkerToMine(GameObject mine, GameObject warehouse){
+        UpdateAvailStaff();
+
+        if(mine == null || availStaff <= 0)
+         return;
+
+        int n = 0;
+
+        for(int i = 0; i < workers.Count ; i++){
+            if(workers[i].TargetStructure == null){
+                Worker w = workers[i].GetComponent<Worker>();
+                workers[i].TargetStructure = warehouse;
+                workers[i].TargetMine = mine;
+                w.StartMining(mine);
+                n++;
+            }
+
+            if(n >= 1)
+                break;
+        }
+
+        UpdateAvailStaff();
     }
 }

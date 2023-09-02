@@ -193,6 +193,11 @@ public class StructureManager : MonoBehaviour
                         OpenFarmPanel();
                         break;
                     }
+                case "Warehouse":
+                    {
+                        OpenWareHousePanel();
+                        break;
+                    }
             }
         }
     }
@@ -345,4 +350,17 @@ public class StructureManager : MonoBehaviour
             ConstructRoad();
     }
     #endregion
+
+    public void OpenWareHousePanel(){
+        string name = CurStructure.GetComponent<Building>().StructureName;
+
+        MainUI.instance.WarehouseNameText.text = name;
+        MainUI.instance.ToggleWarehousePanel();
+    }
+
+    public void CallWorker(){
+        GameObject mine = FindingTarget.CheckForNearestMine(CurStructure.transform.position,100f,"Mine");
+        Office.instance.SendWorkerToMine(mine, CurStructure);
+        MainUI.instance.UpdateResourceUi();
+    }
 }

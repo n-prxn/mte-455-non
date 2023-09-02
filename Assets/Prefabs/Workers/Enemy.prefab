@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 2629833243630890806}
   - component: {fileID: 2814412359833672571}
   - component: {fileID: 309912310282904525}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Enemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -74,6 +74,7 @@ MonoBehaviour:
   hp: 100
   state: 0
   targetStructure: {fileID: 0}
+  targetUnit: {fileID: 0}
   detectRange: 50
   attackRange: 2
   attackPower: 5
@@ -82,6 +83,9 @@ MonoBehaviour:
   tools: []
   weapon: {fileID: 3948620372157409498}
   buildingLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  unitLayerMask:
     serializedVersion: 2
     m_Bits: 0
   checkForEnemyRate: 1
@@ -1887,6 +1891,10 @@ PrefabInstance:
     - target: {fileID: 1786113411084150, guid: 34a0c79aea841d043ba81a1e73b50b5e, type: 3}
       propertyPath: m_Name
       value: Chainsaw
+      objectReference: {fileID: 0}
+    - target: {fileID: 1786113411084150, guid: 34a0c79aea841d043ba81a1e73b50b5e, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1786113411084150, guid: 34a0c79aea841d043ba81a1e73b50b5e, type: 3}
       propertyPath: m_IsActive

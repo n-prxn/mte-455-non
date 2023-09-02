@@ -21,6 +21,10 @@ public abstract class Structure : MonoBehaviour
     }
 
     [SerializeField] protected bool functional;
+    public bool Functional{
+        get {return functional;}
+        set {functional = value;}
+    }
 
     [SerializeField] private string structureName;
     public string StructureName{

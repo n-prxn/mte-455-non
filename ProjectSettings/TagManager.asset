@@ -8,6 +8,10 @@ TagManager:
   - Building
   - Farm
   - Road
+  - Unit
+  - Enemy
+  - Warehouse
+  - Mine
   layers:
   - Default
   - TransparentFX
@@ -16,8 +20,8 @@ TagManager:
   - Water
   - UI
   - Building
-  - 
-  - 
+  - Unit
+  - Mine
   - 
   - 
   - 

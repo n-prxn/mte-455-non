@@ -17,7 +17,10 @@ public enum UnitState
     AttackUnit,
     MoveToAttackBuilding,
     AttackBuilding,
+    MoveToMine,
     Mining,
+    MoveToDeliver,
+    Deliver,
     Die
 }
 
@@ -53,6 +56,13 @@ public abstract class Unit : MonoBehaviour
         set { targetStructure = value; }
     }
 
+    [SerializeField] protected GameObject targetUnit;
+    public GameObject TargetUnit
+    {
+        get { return targetUnit; }
+        set { targetUnit = value; }
+    }
+
     [SerializeField] protected float detectRange = 50f;
     public float DetectRange
     {
@@ -78,6 +88,7 @@ public abstract class Unit : MonoBehaviour
     [SerializeField] protected float CheckStateTimeWait = 0.5f;
     [SerializeField] protected GameObject[] tools;
     [SerializeField] protected GameObject weapon;
+
     void Awake()
     {
         navAgent = GetComponent<NavMeshAgent>();
@@ -90,7 +101,7 @@ public abstract class Unit : MonoBehaviour
     }
 
     // Update is called once per frame
-    protected void Update()
+    protected virtual void Update()
     {
         CheckStaffState();
     }
@@ -116,70 +127,153 @@ public abstract class Unit : MonoBehaviour
             case UnitState.MoveToAttackBuilding:
                 MoveToAttackBuilding();
                 break;
+            case UnitState.MoveToAttackUnit:
+                MoveToAttackUnit();
+                break;
             case UnitState.AttackBuilding:
                 AttackBuilding();
+                break;
+            case UnitState.AttackUnit:
+                AttackUnit();
                 break;
         }
     }
 
-    protected void WalkUpdate(){
+    protected void WalkUpdate()
+    {
         distance = Vector3.Distance(navAgent.destination, transform.position);
-        if(distance <= 3f){
+        if (distance <= 3f)
+        {
             navAgent.isStopped = true;
             state = UnitState.Idle;
         }
     }
 
-    public void SetToWalk(Vector3 dest){
+    public void SetToWalk(Vector3 dest)
+    {
         state = UnitState.Walk;
-        
+
         navAgent.SetDestination(dest);
         navAgent.isStopped = false;
     }
 
-    protected void MoveToAttackBuilding(){
-        if(targetStructure == null){
+    protected void MoveToAttackBuilding()
+    {
+        if (targetStructure == null)
+        {
             state = UnitState.Idle;
             navAgent.isStopped = true;
             return;
         }
-        else{
+        else
+        {
             navAgent.SetDestination(targetStructure.transform.position);
             navAgent.isStopped = false;
         }
 
         distance = Vector3.Distance(transform.position, targetStructure.transform.position);
 
-        if(distance <= attackRange)
+        if (distance <= attackRange)
             state = UnitState.AttackBuilding;
     }
 
-    protected void AttackBuilding(){
+    protected void AttackBuilding()
+    {
         EquipWeapon();
 
-        if(navAgent != null)
+        if (navAgent != null)
             navAgent.isStopped = true;
 
-        if(targetStructure != null){
+        if (targetStructure != null)
+        {
             LookAt(targetStructure.transform.position);
-            Building b = targetStructure.GetComponent<Building>(); 
+            Building b = targetStructure.GetComponent<Building>();
             b.TakeDamage(attackPower);
         }
     }
 
-    protected void DisableWeapon(){
+    protected void DisableWeapon()
+    {
         weapon.SetActive(false);
     }
 
-    protected void EquipWeapon(){
-        weapon.SetActive(true);
+    protected void EquipWeapon()
+    {
+        if (gameObject.tag == "Enemy")
+            weapon.SetActive(true);
     }
 
-    protected void LookAt(Vector3 pos){
+    protected void LookAt(Vector3 pos)
+    {
         Vector3 dir = (pos - transform.position).normalized;
         float angle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
 
 
-        transform.rotation = Quaternion.Euler(0,angle,0);
+        transform.rotation = Quaternion.Euler(0, angle, 0);
+    }
+
+    public void TakeDamage(Unit attacker)
+    {
+        CheckSelfDefense(attacker);
+        hp -= attacker.attackPower;
+        if (hp <= 0)
+            Destroy(gameObject);
+    }
+
+    public void TakeDamage(Turret attacker)
+    {
+        hp -= attacker.ShootDamage;
+        if (hp < 0)
+            Destroy(gameObject);
+    }
+
+    protected void MoveToAttackUnit()
+    {
+        if (targetUnit == null)
+        {
+            state = UnitState.Idle;
+            navAgent.isStopped = true;
+            return;
+        }
+        else
+        {
+            navAgent.SetDestination(targetUnit.transform.position);
+            navAgent.isStopped = false;
+        }
+
+        distance = Vector3.Distance(transform.position, targetUnit.transform.position);
+        if (distance < attackRange)
+        {
+            state = UnitState.AttackUnit;
+        }
+    }
+
+    protected void AttackUnit()
+    {
+        EquipWeapon();
+        if (navAgent != null)
+            navAgent.isStopped = true;
+
+        if (targetUnit != null)
+        {
+            LookAt(targetUnit.transform.position);
+
+            Unit u = targetUnit.GetComponent<Unit>();
+            u.TakeDamage(this);
+        }
+        else
+        {
+            targetUnit = null;
+            state = UnitState.Idle;
+        }
+    }
+
+    public void CheckSelfDefense(Unit u)
+    {
+        if (u.gameObject != null)
+        {
+            targetUnit = u.gameObject;
+            state = UnitState.MoveToAttackUnit;
+        }
     }
 }
