@@ -199,8 +199,7 @@ public abstract class Unit : MonoBehaviour
 
     protected void EquipWeapon()
     {
-        if (gameObject.tag == "Enemy")
-            weapon.SetActive(true);
+        weapon.SetActive(true);
     }
 
     protected void LookAt(Vector3 pos)
@@ -214,7 +213,9 @@ public abstract class Unit : MonoBehaviour
 
     public void TakeDamage(Unit attacker)
     {
-        CheckSelfDefense(attacker);
+        if(gameObject.tag == "Unit")
+            CheckSelfDefense(attacker);
+            
         hp -= attacker.attackPower;
         if (hp <= 0)
             Destroy(gameObject);
@@ -223,7 +224,7 @@ public abstract class Unit : MonoBehaviour
     public void TakeDamage(Turret attacker)
     {
         hp -= attacker.ShootDamage;
-        if (hp < 0)
+        if (hp <= 0)
             Destroy(gameObject);
     }
 

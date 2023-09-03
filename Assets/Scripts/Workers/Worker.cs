@@ -249,7 +249,8 @@ public class Worker : Unit
             StartMining(newMine);
             return;
         }
-        DisableAllTools();
+        
+        EquipTools(3);
 
         if (Time.time - timeLastDig > digRate)
         {

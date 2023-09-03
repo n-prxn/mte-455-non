@@ -1933,7 +1933,7 @@ GameObject:
   - component: {fileID: 366767347}
   - component: {fileID: 366767346}
   m_Layer: 5
-  m_Name: Corn
+  m_Name: Stone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3927,7 +3927,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -64454348, guid: edabe29ebe0d2604282d6621d35295db, type: 3}
+  m_Sprite: {fileID: -1244778473, guid: c48e741322b4d18458785aaf92739980, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -5611,7 +5611,7 @@ MonoBehaviour:
   staffText: {fileID: 1899698200}
   wheatText: {fileID: 450700239}
   melonText: {fileID: 1072642589}
-  cornText: {fileID: 1804598581}
+  stoneText: {fileID: 1804598581}
   milkText: {fileID: 1803959211}
   appleText: {fileID: 164294678}
   dayText: {fileID: 609007574}
@@ -7525,7 +7525,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1001859191395876, guid: 2e5cd1d81e85a7e4a94ae91ed9f8dcd5, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4174984599835276, guid: 2e5cd1d81e85a7e4a94ae91ed9f8dcd5, type: 3}
       propertyPath: m_RootOrder
