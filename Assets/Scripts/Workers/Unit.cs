@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Events;
 
 public enum UnitState
 {
@@ -89,6 +90,7 @@ public abstract class Unit : MonoBehaviour
     [SerializeField] protected GameObject[] tools;
     [SerializeField] protected GameObject weapon;
 
+    public UnityEvent<UnitState> onStateChange;
     void Awake()
     {
         navAgent = GetComponent<NavMeshAgent>();
@@ -174,7 +176,7 @@ public abstract class Unit : MonoBehaviour
         distance = Vector3.Distance(transform.position, targetStructure.transform.position);
 
         if (distance <= attackRange)
-            state = UnitState.AttackBuilding;
+            SetUnitState(UnitState.AttackBuilding);
     }
 
     protected void AttackBuilding()
@@ -245,7 +247,7 @@ public abstract class Unit : MonoBehaviour
         distance = Vector3.Distance(transform.position, targetUnit.transform.position);
         if (distance < attackRange)
         {
-            state = UnitState.AttackUnit;
+            SetUnitState(UnitState.AttackUnit);
         }
     }
 
@@ -276,5 +278,12 @@ public abstract class Unit : MonoBehaviour
             targetUnit = u.gameObject;
             state = UnitState.MoveToAttackUnit;
         }
+    }
+
+    public void SetUnitState(UnitState s){
+        if(onStateChange != null)
+            onStateChange.Invoke(s);
+
+        state = s;
     }
 }

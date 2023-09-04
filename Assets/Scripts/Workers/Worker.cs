@@ -228,12 +228,12 @@ public class Worker : Unit
             StartMining(newMine);
         }
 
-        DisableAllTools();
+        EquipTools(3);
 
         if (Vector3.Distance(transform.position, navAgent.destination) <= 1f)
         {
             LookAt(navAgent.destination);
-            state = UnitState.Mining;
+            SetUnitState(UnitState.Mining);
         }
     }
 
@@ -299,6 +299,7 @@ public class Worker : Unit
 
         Office.instance.Stone += curAmount;
         curAmount = 0;
+        MainUI.instance.UpdateResourceUi();
 
         if (targetMine != null)
             StartMining(targetMine);
