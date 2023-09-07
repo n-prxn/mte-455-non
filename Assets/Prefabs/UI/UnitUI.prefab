@@ -87,7 +87,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &5414057636689996879
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -131,6 +131,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateBubbleImg: {fileID: 5403056325515850730}
   miningState: {fileID: 21300000, guid: 01ea13bda1295d147be651daa73492a5, type: 3}
+  plowingState: {fileID: 21300000, guid: b1b2bc25bcf73d445810530da004c41e, type: 3}
+  sowingState: {fileID: 21300000, guid: 71650286fb6139142a617999a22958c9, type: 3}
+  wateringState: {fileID: 21300000, guid: 02369aaeec3704f479124200d17ffc47, type: 3}
+  harvestingState: {fileID: 21300000, guid: d295703c96c91894ca18da05712d5d35, type: 3}
   attackState: {fileID: 21300000, guid: 1dd88718c926e744cb679a40895b585d, type: 3}
 --- !u!1 &9135831336741418414
 GameObject:

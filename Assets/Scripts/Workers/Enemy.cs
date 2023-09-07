@@ -34,22 +34,22 @@ public class Enemy : Unit
         if (enemyBuilding != null)
         {
             targetStructure = enemyBuilding.gameObject;
-            state = UnitState.MoveToAttackBuilding;
+            SetUnitState(UnitState.MoveToAttackBuilding);
         }
         else
         {
             targetStructure = null;
-            state = UnitState.Idle;
+            SetUnitState(UnitState.Idle);
 
             if (enemyUnit != null)
             {
                 targetUnit = enemyUnit.gameObject;
-                state = UnitState.MoveToAttackUnit;
+                SetUnitState(UnitState.MoveToAttackUnit);
             }
             else
             {
                 targetUnit = null;
-                state = UnitState.Idle;
+                SetUnitState(UnitState.Idle);
             }
         }
     }
