@@ -267,7 +267,7 @@ public abstract class Unit : MonoBehaviour
         else
         {
             targetUnit = null;
-            state = UnitState.Idle;
+            SetUnitState(UnitState.Idle);
         }
     }
 
@@ -276,7 +276,7 @@ public abstract class Unit : MonoBehaviour
         if (u.gameObject != null)
         {
             targetUnit = u.gameObject;
-            state = UnitState.MoveToAttackUnit;
+            SetUnitState(UnitState.MoveToAttackUnit);
         }
     }
 
