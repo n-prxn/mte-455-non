@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MainUI : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class MainUI : MonoBehaviour
     [SerializeField] private TMP_Text wheatText;
     [SerializeField] private TMP_Text melonText;
     [SerializeField] private TMP_Text stoneText;
-    [SerializeField] private TMP_Text milkText;
+    [SerializeField] private TMP_Text woodText;
     [SerializeField] private TMP_Text appleText;
     [SerializeField] private TMP_Text dayText;
 
@@ -19,6 +20,9 @@ public class MainUI : MonoBehaviour
     public static MainUI instance;
 
     public GameObject farmPanel;
+    public GameObject techPanel;
+    [SerializeField] private Button[] techBtns;
+    [SerializeField] private TMP_Text[] techTexts;
     [SerializeField] private TMP_Text farmNameText;
     public TMP_Text FarmNameText
     {
@@ -42,12 +46,15 @@ public class MainUI : MonoBehaviour
     void Start()
     {
         UpdateResourceUi();
+        UpdateDayText();
+        SetTechBtnIcons();
+        UpdateTechBtns();
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        UpdateTechBtns();
     }
 
     public void UpdateResourceUi()
@@ -57,8 +64,13 @@ public class MainUI : MonoBehaviour
         wheatText.text = Office.instance.Wheat.ToString();
         melonText.text = Office.instance.Melon.ToString();
         stoneText.text = Office.instance.Stone.ToString();
-        milkText.text = Office.instance.Milk.ToString();
+        woodText.text = Office.instance.Wood.ToString();
         appleText.text = Office.instance.Apple.ToString();
+    }
+
+    public void UpdateDayText()
+    {
+        dayText.text = "Day " + GameManager.instance.Day.ToString();
     }
 
     public void ToggleLaborPanel()
@@ -77,10 +89,64 @@ public class MainUI : MonoBehaviour
             farmPanel.SetActive(false);
     }
 
-    public void ToggleWarehousePanel(){
-        if(!warehousePanel.activeInHierarchy)
+    public void ToggleWarehousePanel()
+    {
+        if (!warehousePanel.activeInHierarchy)
             warehousePanel.SetActive(true);
         else
             warehousePanel.SetActive(false);
+    }
+
+    public void ToggleTechPanel()
+    {
+        if (!techPanel.activeInHierarchy)
+            techPanel.SetActive(true);
+        else
+            techPanel.SetActive(false);
+    }
+
+    public void ClickResearchTech(int i)
+    {
+        if (TechManager.instance.ResearchTech(i))
+        {
+            UpdateResourceUi();
+            techBtns[i].interactable = false;
+            techTexts[i].text = "In Progress";
+        }
+    }
+
+    public void SetTechBtnIcons()
+    {
+        for (int i = 0; i < techBtns.Length; i++)
+        {
+            techBtns[i].image.sprite = TechManager.instance.TechSet[i].Icon;
+        }
+    }
+
+    public void UpdateTechBtns()
+    {
+        for (int i = 0; i < techBtns.Length; i++)
+        {
+            if (TechManager.instance.CheckTechState(i, TechState.Locked))
+            {
+                techBtns[i].interactable = false;
+                techTexts[i].text = "Locked";
+            }
+            if (TechManager.instance.CheckTechState(i, TechState.Unlocked))
+            {
+                techBtns[i].interactable = true;
+                techTexts[i].text = "";
+            }
+            if (TechManager.instance.CheckTechState(i, TechState.InProgress))
+            {
+                techBtns[i].interactable = false;
+                techTexts[i].text = "In Progress";
+            }
+            if (TechManager.instance.CheckTechState(i, TechState.Completed))
+            {
+                techBtns[i].interactable = false;
+                techTexts[i].text = "Completed";
+            }
+        }
     }
 }
