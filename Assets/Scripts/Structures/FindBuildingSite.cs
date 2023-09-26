@@ -40,19 +40,16 @@ public class FindBuildingSite : MonoBehaviour
 
     private void ChangeColor(Collider other, bool flag, Color color)
     {
-        if (other.tag == "Building" || other.tag == "House" || other.tag == "Farm" || other.tag == "Road" || other.tag == "Warehouse" || other.tag == "Mine")
+        if (other.tag == "Building" || other.tag == "House" || other.tag == "Farm" || other.tag == "Road" || other.tag == "Warehouse" || other.tag == "Mine" || other.tag == "Lumber")
         {
             pRenderer.material.color = color;
             canBuild = flag;
         }
     }
 
-    public void ChangeColorFromCursorOverlay(string mode){
-        switch(mode){
-            case "Demolishing":
-                pRenderer.material.color = Color.red;
-                break;
-        }
+    public void ChangeColor(Color color)
+    {
+        pRenderer.material.color = color;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -65,7 +62,8 @@ public class FindBuildingSite : MonoBehaviour
         ChangeColor(other, false, Color.red);
     }
 
-    private void OnTriggerExit(Collider other){
+    private void OnTriggerExit(Collider other)
+    {
         ChangeColor(other, true, Color.green);
     }
 }

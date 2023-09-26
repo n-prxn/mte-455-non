@@ -5,6 +5,8 @@ using UnityEngine;
 public enum StructureType{
     road,
     building,
+    mine,
+    lumber,
     wheat,
     apple,
     melon,
@@ -48,19 +50,6 @@ public abstract class Structure : MonoBehaviour
     public int ID{
         get {return ID;}
         set {ID = value;}
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        functional = false;
-        hp = 1;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public void TakeDamage(int n){

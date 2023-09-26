@@ -30,11 +30,16 @@ public class StructureManager : MonoBehaviour
     private Camera cam;
 
     [Header("Road")]
+
     [SerializeField] private GameObject roadGreenTilePrefab;
+    [SerializeField] private GameObject roadCorner;
     [SerializeField] private GameObject roadGreenTileParent;
-    [SerializeField] private Vector3 startRoadPos;
-    [SerializeField] private Vector3 endRoadPos;
-    [SerializeField] private List<GameObject> roadGreenTilesList = new List<GameObject>();
+    private Vector3 startRoadPos;
+    private Vector3 endRoadPos;
+    private Vector3 cornerPos;
+    private List<GameObject> roadGreenTilesList = new List<GameObject>();
+    private List<int> roadTypes = new();
+    private List<Quaternion> roadDirections = new();
 
     // Start is called before the first frame update
     void Start()
@@ -45,6 +50,8 @@ public class StructureManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        Debug.DrawRay(ray.origin, ray.direction * 500000f, Color.blue);
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             CancelStructureMode();
@@ -70,6 +77,7 @@ public class StructureManager : MonoBehaviour
 
         CheckLeftClick();
         CheckRoadMode();
+        CheckHold();
 
         //CursorAreaCheck.instance.Cursor = curCursorPos;
     }
@@ -115,10 +123,17 @@ public class StructureManager : MonoBehaviour
         {
             if (isConstructing)
                 PlaceBuilding();
-            else if (isDemolishing)
-                Demolish();
             else
                 CheckOpenPanel();
+        }
+    }
+
+    private void CheckHold()
+    {
+        if (isDemolishing)
+        {
+            if (Input.GetMouseButton(0))
+                Demolish();
         }
     }
 
@@ -213,29 +228,13 @@ public class StructureManager : MonoBehaviour
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit, 1000))
+        if (Physics.Raycast(ray, out hit, 1000, LayerMask.GetMask("Building")))
         {
-            if (EventSystem.current.IsPointerOverGameObject())
-                return;
-
-            switch (hit.collider.tag)
-            {
-                case "Farm":
-                    {
-                        Office.instance.RemoveBuilding(hit.collider.GetComponent<Structure>());
-                        break;
-                    }
-            }
+            Office.instance.RemoveBuilding(hit.collider.GetComponent<Structure>());
         }
-
-        /*Structure structure = Office.instance.Structures.Find(x => x.transform.position == curCursorPos);
-
-        if(structure != null){
-            Office.instance.RemoveBuilding(structure);
-        }*/
-
         MainUI.instance.UpdateResourceUi();
     }
+
 
     public void ToggleDemolish()
     {
@@ -270,10 +269,30 @@ public class StructureManager : MonoBehaviour
         int zModifier = zTileNum >= 0 ? 1 : -1;
 
         path.Add(startPos);
+        roadDirections.Add(Quaternion.Euler(0, xModifier < 0 ? 90 : 270, 0));
+        roadTypes.Add(0);
 
         for (int i = 1; i <= Mathf.Abs(xTileNum); i++)
         {
             path.Add(startPos + new Vector3(5f * i * xModifier, 0f, 0f));
+            if (i == Mathf.Abs(xTileNum))
+            {
+                if (xModifier > 0 && zModifier > 0)
+                    roadDirections.Add(Quaternion.Euler(0, 180, 0));
+                else if (xModifier < 0 && zModifier > 0)
+                    roadDirections.Add(Quaternion.Euler(0, 270, 0));
+                else if (xModifier > 0 && zModifier < 0)
+                    roadDirections.Add(Quaternion.Euler(0, 90, 0));
+                else if (xModifier < 0 && zModifier < 0)
+                    roadDirections.Add(Quaternion.Euler(0, 0, 0));
+                roadTypes.Add(1);
+            }
+            else
+            {
+                roadDirections.Add(Quaternion.Euler(0, xModifier < 0 ? 90 : 270, 0));
+                roadTypes.Add(0);
+            }
+
         }
 
         Vector3 corner = path.Count > 1 ? path[path.Count - 1] : startRoadPos;
@@ -281,6 +300,8 @@ public class StructureManager : MonoBehaviour
         for (int i = 1; i <= Mathf.Abs(zTileNum); i++)
         {
             path.Add(corner + new Vector3(0f, 0f, 5f * i * zModifier));
+            roadDirections.Add(Quaternion.Euler(0, zModifier < 0 ? 0 : 180, 0));
+            roadTypes.Add(0);
         }
 
         return path;
@@ -295,6 +316,8 @@ public class StructureManager : MonoBehaviour
 
         endRoadPos = curCursorPos;
 
+        roadDirections.Clear();
+        roadTypes.Clear();
         List<Vector3> newPath = FindNewPath(startRoadPos, endRoadPos);
         ClearGreenTileList();
 
@@ -306,13 +329,16 @@ public class StructureManager : MonoBehaviour
 
     private void ConstructRoad()
     {
-        foreach (GameObject tileObj in roadGreenTilesList)
+        /*for(int i = 0 ; i < roadGreenTilesList.Count ; i++){
+
+        }*/
+        for (int i = 0; i < roadGreenTilesList.Count; i++)
         {
             if (CheckMoney(curBuildingPrefab) == false)
                 CancelStructureMode();
             else
             {
-                GameObject roadObj = Instantiate(curBuildingPrefab, tileObj.transform.position, Quaternion.identity, buildingParent.transform);
+                GameObject roadObj = Instantiate(roadTypes[i] == 0 ? curBuildingPrefab : roadCorner, roadGreenTilesList[i].transform.position, roadDirections[i], buildingParent.transform);
                 Structure s = roadObj.GetComponent<Structure>();
                 Office.instance.AddBuilding(s);
                 DeductMoney(s.CostToBuild);
@@ -351,16 +377,18 @@ public class StructureManager : MonoBehaviour
     }
     #endregion
 
-    public void OpenWareHousePanel(){
+    public void OpenWareHousePanel()
+    {
         string name = CurStructure.GetComponent<Building>().StructureName;
 
         MainUI.instance.WarehouseNameText.text = name;
         MainUI.instance.ToggleWarehousePanel();
     }
 
-    public void CallWorker(){
-        GameObject mine = FindingTarget.CheckForNearestMine(CurStructure.transform.position,100f,"Mine");
-        Office.instance.SendWorkerToMine(mine, CurStructure);
+    public void CallWorker(string structureTag)
+    {
+        GameObject resource = FindingTarget.CheckForNearestResourceStructure(CurStructure.transform.position, 100f, structureTag);
+        Office.instance.SendWorkerToMine(resource, CurStructure, 3);
         MainUI.instance.UpdateResourceUi();
     }
 }

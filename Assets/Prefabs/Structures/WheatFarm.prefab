@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3099351992135718833}
   - component: {fileID: 6688413840244728913}
   - component: {fileID: 5423751064450141549}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: WheatFarm
   m_TagString: Farm
   m_Icon: {fileID: 0}
@@ -50,7 +50,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8eba339af5aa9fc4796d648820ee7c72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  structureType: 2
+  structureType: 4
   functional: 0
   structureName: Wheat Farm
   hp: 1
@@ -82,7 +82,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 35, y: 10, z: 20}
+  m_Size: {x: 34.5, y: 10, z: 24.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &6688413840244728913
 Rigidbody:

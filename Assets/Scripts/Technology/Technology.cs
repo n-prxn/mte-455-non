@@ -48,7 +48,7 @@ public class Technology
 
     public void InitData(TechSO techSO){
         id = techSO.id;
-        techName = techSO.name;
+        techName = techSO.techName;
         icon = techSO.icon;
         requiredTechID.AddRange(techSO.requiredTechID);
         cost = techSO.cost;

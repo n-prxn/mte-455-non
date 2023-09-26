@@ -85,10 +85,10 @@ public static class FindingTarget
             return null;
     }
 
-    public static GameObject CheckForNearestMine(Vector3 origin, float range, string tag){
+    public static GameObject CheckForNearestResourceStructure(Vector3 origin, float range, string tag){
         RaycastHit[] hits = Physics.SphereCastAll(origin,
                                                     range,
-                                                    Vector3.up, 0f, LayerMask.GetMask("Mine"));
+                                                    Vector3.up, 0f, LayerMask.GetMask("Building"));
 
         GameObject closest = null;
         float closestDist = 0f;
@@ -100,7 +100,7 @@ public static class FindingTarget
                 continue;
 
             //Debug.Log("Test - " + hits[x].collider.gameObject.ToString());
-            Mine target = hits[x].collider.GetComponent<Mine>();
+            ResourceStructure target = hits[x].collider.GetComponent<ResourceStructure>();
             float dist = Vector3.Distance(origin, hits[x].transform.position);
 
             // skip if this is not a building

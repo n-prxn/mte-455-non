@@ -71,26 +71,26 @@ public class Worker : Unit
         set { curAmount = value; }
     }
 
-    [SerializeField] private GameObject targetMine;
-    public GameObject TargetMine
+    [SerializeField] private GameObject targetResource;
+    public GameObject TargetResource
     {
-        get { return targetMine; }
-        set { targetMine = value; }
+        get { return targetResource; }
+        set { targetResource = value; }
     }
 
-    [SerializeField] private float miningTimer = 0f;
-    [SerializeField] private float miningTimeWait = 1f;
-    [SerializeField] private float timeLastDig;
-    [SerializeField] private float digRate = 3f;
+    [SerializeField] private float collectingTimer = 0f;
+    [SerializeField] private float collectingTimeWait = 1f;
+    [SerializeField] private float timeLastCollect;
+    [SerializeField] private float collectRate = 3f;
 
     protected override void Update()
     {
         base.Update();
 
-        miningTimer += Time.deltaTime;
-        if (miningTimer >= miningTimeWait)
+        collectingTimer += Time.deltaTime;
+        if (collectingTimer >= collectingTimeWait)
         {
-            miningTimer = 0f;
+            collectingTimer = 0f;
             CheckWorkerState();
         }
     }
@@ -156,11 +156,11 @@ public class Worker : Unit
             }
         }
 
-        Mine mine = other.gameObject.GetComponent<Mine>();
+        ResourceStructure mine = other.gameObject.GetComponent<ResourceStructure>();
         if ((other.tag == "Mine") && (mine != null) && (mine.HP < 100))
         {
-            LookAt(targetMine.transform.position);
-            SetUnitState(UnitState.Mining);
+            LookAt(targetResource.transform.position);
+            SetUnitState(UnitState.CollectResource);
         }
     }
 
@@ -189,43 +189,43 @@ public class Worker : Unit
         switch (state)
         {
             case UnitState.MoveToMine:
-                MoveToMiningUpdate();
+                MoveToCollectResourceUpdate();
                 break;
-            case UnitState.Mining:
-                MiningUpdate();
+            case UnitState.CollectResource:
+                CollectingResourceUpdate();
                 break;
             case UnitState.MoveToDeliver:
                 MoveToDeliverUpdate();
                 break;
             case UnitState.Deliver:
-                DeliverUpdate();
+                DeliverUpdate(targetResource.tag);
                 break;
         }
     }
 
     #region Resource
-    public void StartMining(GameObject mine)
+    public void StartCollectResource(GameObject resource)
     {
-        if (mine == null)
+        if (resource == null)
         {
-            targetMine = null;
+            targetResource = null;
             SetUnitState(UnitState.MoveToDeliver);
             navAgent.SetDestination(targetStructure.transform.position);
         }
         else
         {
             SetUnitState(UnitState.MoveToMine);
-            navAgent.SetDestination(mine.transform.position);
+            navAgent.SetDestination(resource.transform.position);
         }
         navAgent.isStopped = false;
     }
 
-    void MoveToMiningUpdate()
+    void MoveToCollectResourceUpdate()
     {
-        if (targetMine == null)
+        if (targetResource == null)
         {
-            GameObject newMine = FindingTarget.CheckForNearestMine(targetStructure.transform.position, 100f, "Mine");
-            StartMining(newMine);
+            GameObject newResource = FindingTarget.CheckForNearestResourceStructure(targetStructure.transform.position, 100f, "Mine");
+            StartCollectResource(newResource);
         }
 
         EquipTools(3);
@@ -233,31 +233,31 @@ public class Worker : Unit
         if (Vector3.Distance(transform.position, navAgent.destination) <= 1f)
         {
             LookAt(navAgent.destination);
-            SetUnitState(UnitState.Mining);
+            SetUnitState(UnitState.CollectResource);
         }
     }
 
-    void MiningUpdate()
+    void CollectingResourceUpdate()
     {
-        Mine mine;
-        if (targetMine != null)
-            mine = targetMine.GetComponent<Mine>();
+        ResourceStructure resource;
+        if (targetResource != null)
+            resource = targetResource.GetComponent<ResourceStructure>();
         else
         {
-            GameObject newMine = FindingTarget.CheckForNearestMine(targetStructure.transform.position, 100f, "Mine");
-            targetMine = newMine;
-            StartMining(newMine);
+            GameObject newResource = FindingTarget.CheckForNearestResourceStructure(targetStructure.transform.position, 100f, "Mine");
+            targetResource = newResource;
+            StartCollectResource(newResource);
             return;
         }
-        
+
         EquipTools(3);
 
-        if (Time.time - timeLastDig > digRate)
+        if (Time.time - timeLastCollect > collectRate)
         {
-            timeLastDig = Time.time;
+            timeLastCollect = Time.time;
             if (curAmount < maxAmount)
             {
-                mine.Deplete(3);
+                resource.Deplete(3);
                 curAmount += 3;
 
                 if (curAmount > maxAmount)
@@ -289,7 +289,7 @@ public class Worker : Unit
         }
     }
 
-    private void DeliverUpdate()
+    private void DeliverUpdate(string resource)
     {
         if (targetStructure == null)
         {
@@ -297,17 +297,26 @@ public class Worker : Unit
             return;
         }
 
-        Office.instance.Stone += curAmount;
+        switch (resource)
+        {
+            case "Mine":
+                Office.instance.Stone += curAmount;
+                break;
+            case "Lumber":
+                Office.instance.Wood += curAmount;
+                break;
+        }
+        
         curAmount = 0;
         MainUI.instance.UpdateResourceUi();
 
-        if (targetMine != null)
-            StartMining(targetMine);
+        if (targetResource != null)
+            StartCollectResource(targetResource);
         else
         {
-            GameObject newMine = FindingTarget.CheckForNearestMine(targetStructure.transform.position, 100f, "Mine");
-            if (newMine != null)
-                StartMining(newMine);
+            GameObject newResource = FindingTarget.CheckForNearestResourceStructure(targetStructure.transform.position, 100f, targetResource.tag);
+            if (newResource != null)
+                StartCollectResource(newResource);
             else
             {
                 targetStructure = null;

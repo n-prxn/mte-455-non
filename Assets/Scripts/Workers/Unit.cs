@@ -19,7 +19,7 @@ public enum UnitState
     MoveToAttackBuilding,
     AttackBuilding,
     MoveToMine,
-    Mining,
+    CollectResource,
     MoveToDeliver,
     Deliver,
     Die

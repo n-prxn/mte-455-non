@@ -19,51 +19,57 @@ public class WorkerController : MonoBehaviour
         CheckState();
     }
 
-    private void CheckState(){
+    private void CheckState()
+    {
         DisableAll();
-        switch(worker.State){
+        switch (worker.State)
+        {
             case UnitState.Idle:
-                anim.SetBool("isIdle",true);
+                anim.SetBool("isIdle", true);
                 break;
             case UnitState.Walk:
             case UnitState.MoveToAttackBuilding:
             case UnitState.MoveToAttackUnit:
             case UnitState.MoveToDeliver:
             case UnitState.MoveToMine:
-                anim.SetBool("isWalk",true);
+                anim.SetBool("isWalk", true);
                 break;
             case UnitState.Plow:
-                anim.SetBool("isPlow",true);
+                anim.SetBool("isPlow", true);
                 break;
             case UnitState.Sow:
-                anim.SetBool("isSow",true);
+                anim.SetBool("isSow", true);
                 break;
             case UnitState.Water:
-                anim.SetBool("isWater",true);
+                anim.SetBool("isWater", true);
                 break;
             case UnitState.Harvest:
-                anim.SetBool("isHarvest",true);
+                anim.SetBool("isHarvest", true);
                 break;
             case UnitState.AttackBuilding:
             case UnitState.AttackUnit:
-                anim.SetBool("isAttack",true);
+                anim.SetBool("isAttack", true);
                 break;
-            case UnitState.Mining:
-                anim.SetBool("isMining",true);
+            case UnitState.CollectResource:
+                if (worker.TargetResource.CompareTag("Mine"))
+                    anim.SetBool("isMining", true);
+                if (worker.TargetResource.CompareTag("Lumber"))
+                    anim.SetBool("isHarvest", true);
                 break;
             case UnitState.Die:
-                anim.SetBool("isDead",true);
+                anim.SetBool("isDead", true);
                 break;
         }
     }
 
-    private void DisableAll(){
-        anim.SetBool("isIdle",false);
-        anim.SetBool("isWalk",false);
-        anim.SetBool("isPlow",false);
-        anim.SetBool("isSow",false);
-        anim.SetBool("isWater",false);
-        anim.SetBool("isHarvest",false);
-        anim.SetBool("isMining",false);
+    private void DisableAll()
+    {
+        anim.SetBool("isIdle", false);
+        anim.SetBool("isWalk", false);
+        anim.SetBool("isPlow", false);
+        anim.SetBool("isSow", false);
+        anim.SetBool("isWater", false);
+        anim.SetBool("isHarvest", false);
+        anim.SetBool("isMining", false);
     }
 }

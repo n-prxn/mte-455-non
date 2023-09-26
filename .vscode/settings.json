@@ -52,5 +52,6 @@
         "temp/":true,
         "Temp/":true
     },
-    "dotnet.defaultSolution": "mte-455-non.sln"
+    "dotnet.defaultSolution": "mte-455-non.sln",
+    "docwriter.style": "Google"
 }

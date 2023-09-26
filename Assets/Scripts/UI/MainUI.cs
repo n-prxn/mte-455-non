@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class MainUI : MonoBehaviour
 {
+    [Header("Text")]
     [SerializeField] private TMP_Text moneyText;
     [SerializeField] private TMP_Text staffText;
     [SerializeField] private TMP_Text wheatText;
@@ -14,22 +15,6 @@ public class MainUI : MonoBehaviour
     [SerializeField] private TMP_Text woodText;
     [SerializeField] private TMP_Text appleText;
     [SerializeField] private TMP_Text dayText;
-
-    public GameObject laborMarketPanel;
-
-    public static MainUI instance;
-
-    public GameObject farmPanel;
-    public GameObject techPanel;
-    [SerializeField] private Button[] techBtns;
-    [SerializeField] private TMP_Text[] techTexts;
-    [SerializeField] private TMP_Text farmNameText;
-    public TMP_Text FarmNameText
-    {
-        get { return farmNameText; }
-        set { farmNameText = value; }
-    }
-    public GameObject warehousePanel;
     [SerializeField] private TMP_Text warehouseNameText;
     public TMP_Text WarehouseNameText
     {
@@ -37,6 +22,27 @@ public class MainUI : MonoBehaviour
         set { warehouseNameText = value; }
     }
 
+    [SerializeField] private TMP_Text[] techTexts;
+    [SerializeField] private TMP_Text farmNameText;
+    public TMP_Text FarmNameText
+    {
+        get { return farmNameText; }
+        set { farmNameText = value; }
+    }
+
+    [Header("Panel")]
+    public GameObject warehousePanel;
+    public GameObject laborMarketPanel;
+    public GameObject farmPanel;
+    public GameObject techPanel;
+    public GameObject buildingPanel;
+    public GameObject resourcePanel;
+    public GameObject peoplePanel;
+
+    [Header("Tech Buttons")]
+    [SerializeField] private Button[] techBtns;
+
+    public static MainUI instance;
     void Awake()
     {
         instance = this;
@@ -71,6 +77,20 @@ public class MainUI : MonoBehaviour
     public void UpdateDayText()
     {
         dayText.text = "Day " + GameManager.instance.Day.ToString();
+    }
+
+    public void TogglePanel(GameObject panel)
+    {
+        if (!panel.activeSelf)
+            CloseMenuTab();
+        panel.SetActive(!panel.activeSelf);
+    }
+
+    public void CloseMenuTab()
+    {
+        buildingPanel.SetActive(false);
+        resourcePanel.SetActive(false);
+        peoplePanel.SetActive(false);
     }
 
     public void ToggleLaborPanel()

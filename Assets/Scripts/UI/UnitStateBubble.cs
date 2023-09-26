@@ -35,7 +35,7 @@ public class UnitStateBubble : MonoBehaviour
     {
         switch (state)
         {
-            case UnitState.Mining:
+            case UnitState.CollectResource:
                 stateBubbleImg.color = Color.white;
                 stateBubbleImg.sprite = miningState;
                 break;

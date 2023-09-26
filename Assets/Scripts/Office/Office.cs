@@ -238,7 +238,7 @@ public class Office : MonoBehaviour
             unitLimit = 0;
     }
 
-    public void SendWorkerToMine(GameObject mine, GameObject warehouse){
+    public void SendWorkerToMine(GameObject mine, GameObject warehouse , int workerAmount = 1){
         UpdateAvailStaff();
 
         if(mine == null || availStaff <= 0)
@@ -250,12 +250,12 @@ public class Office : MonoBehaviour
             if(workers[i].TargetStructure == null){
                 Worker w = workers[i].GetComponent<Worker>();
                 workers[i].TargetStructure = warehouse;
-                workers[i].TargetMine = mine;
-                w.StartMining(mine);
+                workers[i].TargetResource = mine;
+                w.StartCollectResource(mine);
                 n++;
             }
 
-            if(n >= 1)
+            if(n >= workerAmount)
                 break;
         }
 
