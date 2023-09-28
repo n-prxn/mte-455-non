@@ -45,7 +45,8 @@ public static class FindingTarget
     }
 
     // checks for nearest enemy building with a sphere cast
-    public static Building CheckForNearestEnemyBuilding(Vector3 origin, float range, LayerMask layerMask, string tag){
+    public static Building CheckForNearestEnemyBuilding(Vector3 origin, float range, LayerMask layerMask, string tag)
+    {
         RaycastHit[] hits = Physics.SphereCastAll(origin,
                                                     range,
                                                     Vector3.up,
@@ -85,7 +86,8 @@ public static class FindingTarget
             return null;
     }
 
-    public static GameObject CheckForNearestResourceStructure(Vector3 origin, float range, string tag){
+    public static GameObject CheckForNearestResourceStructure(Vector3 origin, float range, string tag)
+    {
         RaycastHit[] hits = Physics.SphereCastAll(origin,
                                                     range,
                                                     Vector3.up, 0f, LayerMask.GetMask("Building"));
@@ -101,6 +103,47 @@ public static class FindingTarget
 
             //Debug.Log("Test - " + hits[x].collider.gameObject.ToString());
             ResourceStructure target = hits[x].collider.GetComponent<ResourceStructure>();
+            float dist = Vector3.Distance(origin, hits[x].transform.position);
+
+            // skip if this is not a building
+            if (target == null)
+                continue;
+
+            // skip if it is any destroyed building
+            if (target.HP <= 0)
+                continue;
+            // if the closest is null or the distance is less than the closest distance it currently has
+            else if ((closest == null) || (dist < closestDist))
+            {
+                closest = hits[x].collider.gameObject;
+                closestDist = dist;
+            }
+        }
+
+        if (closest != null)
+            return closest;
+        else
+            return null;
+    }
+
+    public static GameObject CheckForNearestHouse(Vector3 origin, float range, LayerMask layerMask)
+    {
+        RaycastHit[] hits = Physics.SphereCastAll(origin,
+                                                    range,
+                                                    Vector3.up,
+                                                    layerMask);
+
+        GameObject closest = null;
+        float closestDist = 0f;
+
+        for (int x = 0; x < hits.Length; x++)
+        {
+            // skip if this is not a target's tag
+            if (hits[x].collider.tag != "House")
+               continue;
+
+            //Debug.Log("Test - " + hits[x].collider.gameObject.ToString());
+            Building target = hits[x].collider.GetComponent<Building>();
             float dist = Vector3.Distance(origin, hits[x].transform.position);
 
             // skip if this is not a building

@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 72519f763442bf847992726bdb17cb16, type: 3}
-  m_Name: Tech2
+  m_Name: Tech4
   m_EditorClassIdentifier: 
-  id: 2
-  techName: Employee Training
-  icon: {fileID: -354810862, guid: 7ebc9157a59e7d34d9d8c8af9911d2d0, type: 3}
+  id: 4
+  techName: Carrier
+  icon: {fileID: 0}
   requiredTechID: 00000000
   cost:
-    money: 3600
-    stone: 50
-    wood: 100
-  daysRequired: 7
-  description: Reduce Time of All Farm Working by 25%
+    money: 3000
+    stone: 150
+    wood: 50
+  daysRequired: 0
+  description: Increase capacity of resources inventory for workers by 20%

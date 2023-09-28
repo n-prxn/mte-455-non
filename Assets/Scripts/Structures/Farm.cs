@@ -110,7 +110,7 @@ public class Farm : Structure
 
     private void Working()
     {
-        hp += 3;
+        hp += 4 + (int)(4 * TechManager.instance.CheckTechBonus(2));
     }
 
     public void CheckTimeForWork()
@@ -128,10 +128,13 @@ public class Farm : Structure
         switch (structureType)
         {
             case StructureType.wheat:
-                Office.instance.Wheat += 1000;
+                Office.instance.Wheat += 1000 + (int)(1000 * TechManager.instance.CheckTechBonus(1));
                 break;
             case StructureType.apple:
-                Office.instance.Apple += 1000;
+                Office.instance.Apple += 1000 + (int)(1000 * TechManager.instance.CheckTechBonus(1));
+                break;
+            case StructureType.melon:
+                Office.instance.Melon += 1000 + (int)(1000 * TechManager.instance.CheckTechBonus(1));
                 break;
         }
 

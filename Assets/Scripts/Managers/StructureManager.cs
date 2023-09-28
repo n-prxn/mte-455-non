@@ -26,6 +26,9 @@ public class StructureManager : MonoBehaviour
         set { _curStructure = value; }
     }
 
+    public bool IsConstructing { get => isConstructing; set => isConstructing = value; }
+    public bool IsDemolishing { get => isDemolishing; set => isDemolishing = value; }
+
     [SerializeField] private GameObject[] structurePrefab;
     private Camera cam;
 
@@ -50,8 +53,6 @@ public class StructureManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-        Debug.DrawRay(ray.origin, ray.direction * 500000f, Color.blue);
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             CancelStructureMode();
@@ -230,6 +231,9 @@ public class StructureManager : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, 1000, LayerMask.GetMask("Building")))
         {
+            if (EventSystem.current.IsPointerOverGameObject())
+            return;
+            
             Office.instance.RemoveBuilding(hit.collider.GetComponent<Structure>());
         }
         MainUI.instance.UpdateResourceUi();

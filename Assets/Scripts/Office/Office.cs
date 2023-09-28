@@ -54,14 +54,16 @@ public class Office : MonoBehaviour
     }
 
     [SerializeField] private int stone;
-    public int Stone{
+    public int Stone
+    {
         get { return stone; }
         set { stone = value; }
     }
     [SerializeField] private int wood;
-    public int Wood{
-        get{return wood;}
-        set{wood = value;}
+    public int Wood
+    {
+        get { return wood; }
+        set { wood = value; }
     }
 
     [SerializeField] private int dailyCostWages;
@@ -126,13 +128,19 @@ public class Office : MonoBehaviour
         if (money <= 0)
             return false;
 
-        if(workers.Count >= unitLimit)
+        if (workers.Count >= unitLimit)
             return false;
 
         workerObj.transform.parent = staffParent.transform;
         Worker w = workerObj.GetComponent<Worker>();
 
         w.Hired = true;
+
+        if (FindingTarget.CheckForNearestHouse(spawnPosition.transform.position, 500f, LayerMask.GetMask("Building")) != null)
+        {
+            rallyPosition.transform.position = FindingTarget.CheckForNearestHouse(spawnPosition.transform.position, 500f, LayerMask.GetMask("Building")).transform.GetChild(2).transform.position;
+        }
+
         w.SetToWalk(rallyPosition.transform.position);
 
         money -= w.DailyWage;
@@ -229,7 +237,7 @@ public class Office : MonoBehaviour
         foreach (Structure s in structures)
         {
             //if (true)
-                unitLimit += housingUnitNum;
+            unitLimit += housingUnitNum;
         }
 
         if (unitLimit >= 100)
@@ -238,16 +246,19 @@ public class Office : MonoBehaviour
             unitLimit = 0;
     }
 
-    public void SendWorkerToMine(GameObject mine, GameObject warehouse , int workerAmount = 1){
+    public void SendWorkerToMine(GameObject mine, GameObject warehouse, int workerAmount = 1)
+    {
         UpdateAvailStaff();
 
-        if(mine == null || availStaff <= 0)
-         return;
+        if (mine == null || availStaff <= 0)
+            return;
 
         int n = 0;
 
-        for(int i = 0; i < workers.Count ; i++){
-            if(workers[i].TargetStructure == null){
+        for (int i = 0; i < workers.Count; i++)
+        {
+            if (workers[i].TargetStructure == null)
+            {
                 Worker w = workers[i].GetComponent<Worker>();
                 workers[i].TargetStructure = warehouse;
                 workers[i].TargetResource = mine;
@@ -255,7 +266,7 @@ public class Office : MonoBehaviour
                 n++;
             }
 
-            if(n >= workerAmount)
+            if (n >= workerAmount)
                 break;
         }
 

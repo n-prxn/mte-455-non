@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 354312973405544664}
   - component: {fileID: 200018971285446948}
   m_Layer: 6
-  m_Name: Mine
+  m_Name: 03 Mine
   m_TagString: Mine
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -55,7 +55,7 @@ MonoBehaviour:
   structureName: Mine
   hp: 100
   costToBuild: 0
-  id: 0
+  id: 3
 --- !u!65 &8317186324846966030
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -255,13 +255,15 @@ public class Worker : Unit
         if (Time.time - timeLastCollect > collectRate)
         {
             timeLastCollect = Time.time;
-            if (curAmount < maxAmount)
+            int carriableAmount = maxAmount;
+            carriableAmount += (int)(maxAmount * TechManager.instance.CheckTechBonus(4));
+            if (curAmount < carriableAmount)
             {
-                resource.Deplete(3);
+                resource.Deplete(3 + (int)(3 * TechManager.instance.CheckTechBonus(3)));
                 curAmount += 3;
 
-                if (curAmount > maxAmount)
-                    curAmount = maxAmount;
+                if (curAmount > carriableAmount)
+                    curAmount = carriableAmount;
             }
             else
             {
@@ -306,7 +308,7 @@ public class Worker : Unit
                 Office.instance.Wood += curAmount;
                 break;
         }
-        
+
         curAmount = 0;
         MainUI.instance.UpdateResourceUi();
 

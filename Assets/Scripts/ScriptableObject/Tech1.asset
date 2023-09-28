@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Tech1
   m_EditorClassIdentifier: 
   id: 1
-  techName: Fertilizer
+  techName: Quality Product
   icon: {fileID: -2143468277, guid: 7ebc9157a59e7d34d9d8c8af9911d2d0, type: 3}
   requiredTechID: 00000000
   cost:

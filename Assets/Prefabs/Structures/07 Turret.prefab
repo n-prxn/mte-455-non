@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 4152763319432248205}
   - component: {fileID: 2787272387966945876}
   m_Layer: 6
-  m_Name: Turret
+  m_Name: 07 Turret
   m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -55,7 +55,7 @@ MonoBehaviour:
   structureName: Turret
   hp: 200
   costToBuild: 800
-  id: 3
+  id: 7
   unitLayerMask:
     serializedVersion: 2
     m_Bits: 0

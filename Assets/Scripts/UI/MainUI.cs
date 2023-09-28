@@ -21,8 +21,6 @@ public class MainUI : MonoBehaviour
         get { return warehouseNameText; }
         set { warehouseNameText = value; }
     }
-
-    [SerializeField] private TMP_Text[] techTexts;
     [SerializeField] private TMP_Text farmNameText;
     public TMP_Text FarmNameText
     {
@@ -41,6 +39,7 @@ public class MainUI : MonoBehaviour
 
     [Header("Tech Buttons")]
     [SerializeField] private Button[] techBtns;
+    [SerializeField] private StructureManager structureManager;
 
     public static MainUI instance;
     void Awake()
@@ -53,7 +52,7 @@ public class MainUI : MonoBehaviour
     {
         UpdateResourceUi();
         UpdateDayText();
-        SetTechBtnIcons();
+        SetTechBtn();
         UpdateTechBtns();
     }
 
@@ -81,6 +80,9 @@ public class MainUI : MonoBehaviour
 
     public void TogglePanel(GameObject panel)
     {
+        if (structureManager.IsConstructing || structureManager.IsDemolishing)
+            return;
+
         if (!panel.activeSelf)
             CloseMenuTab();
         panel.SetActive(!panel.activeSelf);
@@ -88,6 +90,9 @@ public class MainUI : MonoBehaviour
 
     public void CloseMenuTab()
     {
+        if (structureManager.IsConstructing || structureManager.IsDemolishing)
+            return;
+
         buildingPanel.SetActive(false);
         resourcePanel.SetActive(false);
         peoplePanel.SetActive(false);
@@ -95,6 +100,9 @@ public class MainUI : MonoBehaviour
 
     public void ToggleLaborPanel()
     {
+        if (structureManager.IsConstructing || structureManager.IsDemolishing)
+            return;
+
         if (!laborMarketPanel.activeInHierarchy)
             laborMarketPanel.SetActive(true);
         else
@@ -103,6 +111,9 @@ public class MainUI : MonoBehaviour
 
     public void ToggleFarmPanel()
     {
+        if (structureManager.IsConstructing || structureManager.IsDemolishing)
+            return;
+
         if (!farmPanel.activeInHierarchy)
             farmPanel.SetActive(true);
         else
@@ -111,6 +122,9 @@ public class MainUI : MonoBehaviour
 
     public void ToggleWarehousePanel()
     {
+        if (structureManager.IsConstructing || structureManager.IsDemolishing)
+            return;
+
         if (!warehousePanel.activeInHierarchy)
             warehousePanel.SetActive(true);
         else
@@ -119,6 +133,9 @@ public class MainUI : MonoBehaviour
 
     public void ToggleTechPanel()
     {
+        if (structureManager.IsConstructing || structureManager.IsDemolishing)
+            return;
+
         if (!techPanel.activeInHierarchy)
             techPanel.SetActive(true);
         else
@@ -131,15 +148,15 @@ public class MainUI : MonoBehaviour
         {
             UpdateResourceUi();
             techBtns[i].interactable = false;
-            techTexts[i].text = "In Progress";
+            techBtns[i].transform.GetChild(1).GetComponent<TMP_Text>().text = "In Progress";
         }
     }
 
-    public void SetTechBtnIcons()
+    public void SetTechBtn()
     {
         for (int i = 0; i < techBtns.Length; i++)
         {
-            techBtns[i].image.sprite = TechManager.instance.TechSet[i].Icon;
+            techBtns[i].transform.GetChild(0).GetComponent<TMP_Text>().text = TechManager.instance.TechSet[i].TechName;
         }
     }
 
@@ -150,22 +167,22 @@ public class MainUI : MonoBehaviour
             if (TechManager.instance.CheckTechState(i, TechState.Locked))
             {
                 techBtns[i].interactable = false;
-                techTexts[i].text = "Locked";
+                techBtns[i].transform.GetChild(1).GetComponent<TMP_Text>().text = "Locked";
             }
             if (TechManager.instance.CheckTechState(i, TechState.Unlocked))
             {
                 techBtns[i].interactable = true;
-                techTexts[i].text = "";
+                techBtns[i].transform.GetChild(1).GetComponent<TMP_Text>().text = "";
             }
             if (TechManager.instance.CheckTechState(i, TechState.InProgress))
             {
                 techBtns[i].interactable = false;
-                techTexts[i].text = "In Progress";
+                techBtns[i].transform.GetChild(1).GetComponent<TMP_Text>().text = "In Progress";
             }
             if (TechManager.instance.CheckTechState(i, TechState.Completed))
             {
                 techBtns[i].interactable = false;
-                techTexts[i].text = "Completed";
+                techBtns[i].transform.GetChild(1).GetComponent<TMP_Text>().text = "Completed";
             }
         }
     }

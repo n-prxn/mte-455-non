@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6688413840244728913}
   - component: {fileID: 5423751064450141549}
   m_Layer: 6
-  m_Name: Lumber
+  m_Name: 04 Lumber
   m_TagString: Lumber
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -50,12 +50,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8e672927668ccd46816fc8f510eb780, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  structureType: 3
-  functional: 0
+  id: 4
   structureName: Lumber
+  structureType: 3
   hp: 100
   costToBuild: 0
-  id: 0
+  functional: 0
 --- !u!65 &3099351992135718833
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -75,7 +75,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 24.5, y: 10, z: 24.5}
+  m_Size: {x: 24, y: 10, z: 24}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &6688413840244728913
 Rigidbody:
